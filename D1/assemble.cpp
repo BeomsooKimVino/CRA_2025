@@ -65,6 +65,7 @@ void SelectCarAndParts(QuestionType step, int answer)
         case brakeSystem_Q: selectbrakeSystem(answer); break;
         case SteeringSystem_Q: selectSteeringSystem(answer); break;
     }
+    delay(800);
 }
 
 void MenuNormalTransition(QuestionType& step)
@@ -115,11 +116,6 @@ int isValidCheckCarTypeAndEachParts()
     {
         return false;
     }
-    // TODO: Notice: Logic 오류로 삭제 해야 하는 부분
-    //else if (stack[brakeSystem_Q] != BOSCH_B && stack[SteeringSystem_Q] == BOSCH_S)
-    //{
-    //    return false;
-    //}
 
     return true;
 }

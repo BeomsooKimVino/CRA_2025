@@ -129,7 +129,7 @@ void PrintMenuByStep(int step)
 InputValidationResult InputVaildation(char* buf, QuestionType& step, int &answer)
 {
     // TODO: 제출할 때는 800으로 변경 필요
-    int delay_ms = 8;
+    int delay_ms = 800;
 
     // 숫자로 된 대답인지 확인
     char* checkNumber;
