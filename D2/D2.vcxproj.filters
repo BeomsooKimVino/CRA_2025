@@ -44,9 +44,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="SedanPartsSelector.h">
-      <Filter>헤더 파일</Filter>
-    </ClInclude>
     <ClInclude Include="SteeringSystem.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>

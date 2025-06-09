@@ -2,8 +2,6 @@
 #include "Car.h"
 
 #include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
 
 // TODO: The menu operation function should be classified into a class and global variables should be removed.
 Car car;
