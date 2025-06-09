@@ -1,0 +1,251 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+        <meta charset="utf-8"/>
+	    <title>assemble_test.cpp</title>
+	    <link href="../../third-party/google-code-prettify/prettify-CppCoverage.css" type="text/css" rel="stylesheet" />
+	    <script type="text/javascript" src="../../third-party/google-code-prettify/prettify.js"></script>
+	</head>
+    <body onload="prettyPrint()">
+        <h4></h4>
+        <pre class="prettyprint lang-cpp linenums">
+
+#include &lt;gmock/gmock.h&gt;
+#include "assemble.h"
+#include "Car.h"
+
+#include &lt;utility&gt;
+#include &lt;vector&gt;
+#include &lt;unordered_map&gt;
+
+extern Car car;
+
+<span style = "background-color:#dfd">TEST(CarPartsTest, CarPartsValidationAllValidCase)
+{
+    bool expect = true;
+    for (int caridx = 1; caridx &lt;= 3; caridx++)</span>
+    {
+<span style = "background-color:#dfd">        selectCarType(caridx);
+        for (int engine = 1; engine &lt;= 4; engine++)</span>
+        {
+<span style = "background-color:#dfd">            selectEngine(engine);
+            for (int brake = 1; brake &lt;= 3; brake++)</span>
+            {
+<span style = "background-color:#dfd">                selectbrakeSystem(brake);
+                for (int steer = 1; steer &lt;= 2; steer++)</span>
+                {
+<span style = "background-color:#dfd">                    selectSteeringSystem(steer);</span>
+
+<span style = "background-color:#dfd">                    expect = true;
+                    if (car.GetType() == Type::Sedan &amp;&amp; car.GetBrake()-&gt;name() == "Continental")
+                        expect = false;</span>
+
+<span style = "background-color:#dfd">                    if (car.GetType() == Type::SUV &amp;&amp; car.GetEngine()-&gt;name() == "TOYOTA")
+                        expect = false;</span>
+
+<span style = "background-color:#dfd">                    if (car.GetType() == Type::Truck &amp;&amp; car.GetEngine()-&gt;name() == "WIA")
+                        expect = false;</span>
+
+<span style = "background-color:#dfd">                    if (car.GetType() == Type::Truck &amp;&amp; car.GetBrake()-&gt;name() == "Mando")
+                        expect = false;</span>
+
+<span style = "background-color:#dfd">                    if (car.GetBrake()-&gt;name() == "Bosch" &amp;&amp; car.GetSteering()-&gt;name() != "Bosch")
+                        expect = false;</span>
+
+<span style = "background-color:#dfd">                    bool actual = car.CarPartsValidate();
+                    EXPECT_EQ(actual, expect);
+                }
+            }
+        }
+    }
+}</span>
+
+<span style = "background-color:#dfd">TEST(CarPartsTest, runProducedCarAllCov)
+{
+    for (int caridx = 1; caridx &lt;= 3; caridx++)</span>
+    {
+<span style = "background-color:#dfd">        selectCarType(caridx);
+        for (int engine = 1; engine &lt;= 4; engine++)</span>
+        {
+<span style = "background-color:#dfd">            selectEngine(engine);
+            for (int brake = 1; brake &lt;= 3; brake++)</span>
+            {
+<span style = "background-color:#dfd">                selectbrakeSystem(brake);
+                for (int steer = 1; steer &lt;= 2; steer++)</span>
+                {
+<span style = "background-color:#dfd">                    selectSteeringSystem(steer);</span>
+
+<span style = "background-color:#dfd">                    car.Run();
+                }
+            }
+        }
+    }
+}</span>
+
+<span style = "background-color:#dfd">TEST(CarPartsTest, testProducedCarAllCov)
+{
+    for (int caridx = 1; caridx &lt;= 3; caridx++)</span>
+    {
+<span style = "background-color:#dfd">        selectCarType(caridx);
+        for (int engine = 1; engine &lt;= 4; engine++)</span>
+        {
+<span style = "background-color:#dfd">            selectEngine(engine);
+            for (int brake = 1; brake &lt;= 3; brake++)</span>
+            {
+<span style = "background-color:#dfd">                selectbrakeSystem(brake);
+                for (int steer = 1; steer &lt;= 2; steer++)</span>
+                {
+<span style = "background-color:#dfd">                    selectSteeringSystem(steer);</span>
+
+<span style = "background-color:#dfd">                    car.Test();
+                }
+            }
+        }
+    }
+}</span>
+
+<span style = "background-color:#dfd">TEST(CarPartsTest, printTest)
+{
+    for (int step = 0; step &lt;= 4; step++)</span>
+    {
+<span style = "background-color:#dfd">        PrintMenuByStep(step);
+    }
+}</span>
+
+using pii = std::pair&lt;int, int&gt;;
+
+<span style = "background-color:#dfd">std::vector&lt;QuestionType&gt; qtype = {</span>
+    QuestionType::CarType_Q,
+    QuestionType::Engine_Q,
+    QuestionType::brakeSystem_Q,
+    QuestionType::SteeringSystem_Q,
+    QuestionType::Run_Test
+<span style = "background-color:#dfd">};</span>
+
+<span style = "background-color:#dfd">std::unordered_map&lt;QuestionType, pii&gt; validRangeMenu = {</span>
+    {QuestionType::CarType_Q, {1, 3}},
+    {QuestionType::Engine_Q, {0, 4}},
+    {QuestionType::brakeSystem_Q, {0, 3}},
+    {QuestionType::SteeringSystem_Q, {0, 2}},
+    {QuestionType::Run_Test, {0, 2}}
+<span style = "background-color:#dfd">};</span>
+
+<span style = "background-color:#dfd">TEST(TestCaseInputVaidation, TestInputInvalidNonDigit)
+{
+    char* input = (char*)"a";
+    int answer = 0;</span>
+
+<span style = "background-color:#dfd">    for (QuestionType step : qtype)</span>
+    {
+<span style = "background-color:#dfd">        InputValidationResult expected = InputValidationResult::Invalid;
+        InputValidationResult actual = InputVaildation(input, step, answer);
+        EXPECT_EQ(actual, expected);
+    }
+}</span>
+
+<span style = "background-color:#dfd">TEST(TestCaseInputVaidation, TestInputInvalidDigit)
+{</span>
+    char input[10];
+<span style = "background-color:#dfd">    int answer = 0;</span>
+
+<span style = "background-color:#dfd">    for (QuestionType step : qtype)</span>
+    {
+<span style = "background-color:#dfd">        QuestionType varstep = QuestionType::CarType_Q;
+        InputValidationResult expected = InputValidationResult::Invalid;
+        InputValidationResult actual = InputValidationResult::Valid;
+        int validStart = validRangeMenu[step].first - 1;
+        int validEnd = validRangeMenu[step].second + 1;</span>
+
+<span style = "background-color:#dfd">        varstep = step;
+        sprintf_s(input, "%d", validStart);
+        if (step &gt;= QuestionType::Engine_Q)
+            expected = InputValidationResult::Invalid;
+        actual = InputVaildation(input, varstep, answer);
+        EXPECT_EQ(actual, expected);</span>
+
+<span style = "background-color:#dfd">        varstep = step;
+        sprintf_s(input, "%d", validEnd);
+        expected = InputValidationResult::Invalid;
+        actual = InputVaildation(input, varstep, answer);
+        EXPECT_EQ(actual, expected);
+    }
+}</span>
+
+<span style = "background-color:#dfd">TEST(TestCaseInputVaidation, TestInputValidDigit)
+{</span>
+    char input[10];
+<span style = "background-color:#dfd">    int answer = 0;</span>
+
+<span style = "background-color:#dfd">    for (QuestionType step : qtype)</span>
+    {
+<span style = "background-color:#dfd">        InputValidationResult expected = InputValidationResult::Valid;
+        InputValidationResult actual = InputValidationResult::Valid;
+        int validStart = validRangeMenu[step].first;
+        int validEnd = validRangeMenu[step].second;</span>
+
+<span style = "background-color:#dfd">        sprintf_s(input, "%d", validStart);
+        actual = InputVaildation(input, step, answer);
+        EXPECT_EQ(actual, expected);</span>
+
+<span style = "background-color:#dfd">        sprintf_s(input, "%d", validEnd);
+        actual = InputVaildation(input, step, answer);
+        EXPECT_EQ(actual, expected);
+    }
+}</span>
+
+<span style = "background-color:#dfd">TEST(TestCaseInputVaidation, TestInputTransitionBackward)
+{</span>
+    char input[10];
+<span style = "background-color:#dfd">    int answer = 0;</span>
+
+<span style = "background-color:#dfd">    for (QuestionType step : qtype)</span>
+    {
+<span style = "background-color:#dfd">        InputValidationResult expected = InputValidationResult::Valid;
+        InputValidationResult actual = InputValidationResult::Valid;
+        int validStart = validRangeMenu[step].first;
+        int validEnd = validRangeMenu[step].second;</span>
+
+<span style = "background-color:#dfd">        sprintf_s(input, "%d", validStart);
+        actual = InputVaildation(input, step, answer);
+        EXPECT_EQ(actual, expected);</span>
+
+<span style = "background-color:#dfd">        sprintf_s(input, "%d", validEnd);
+        actual = InputVaildation(input, step, answer);
+        EXPECT_EQ(actual, expected);
+    }
+}</span>
+
+
+/*
+TEST(CarPartsTest, carGetTypeName)
+{
+    Car c;
+    std::string Car::GetTypeName()
+    {
+        switch (GetType())
+        {
+        case Type::Sedan: return "Sedan";
+        case Type::SUV: return "SUV";
+        case Type::Truck: return "Truck";
+        };
+        return "";
+    }
+
+    c.SetCarType()
+}
+*/</pre>
+        <hr />
+        <table width="100%">
+            <thead>
+                <tr>
+                    <th align="center">
+                        <small>Generated by</small>
+                        <a href="https://github.com/OpenCppCoverage/OpenCppCoverage/releases">
+                            <strong>OpenCppCoverage (Version: 0.9.9.0)</strong>
+                        </a>
+                    </th>
+                </tr>
+            </thead>
+        </table>
+    </body>
+</html>

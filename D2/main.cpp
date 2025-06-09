@@ -1,9 +1,15 @@
 #include <gmock/gmock.h>
-#include "assemble.h"
 
+#ifdef _DEBUG
+int main()
+{
+	testing::InitGoogleMock();
+	return RUN_ALL_TESTS();
+}
+#elif NDEBUG
+#include "assemble.h"
 int main()
 {
 	return run_assemble();
-	//testing::InitGoogleMock();
-	//return RUN_ALL_TESTS();
 }
+#endif

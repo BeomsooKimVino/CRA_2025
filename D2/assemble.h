@@ -9,33 +9,6 @@ enum QuestionType
     Run_Test,
 };
 
-enum CarType
-{
-    SEDAN = 1,
-    SUV,
-    TRUCK
-};
-
-enum Engine
-{
-    GM = 1,
-    TOYOTA,
-    WIA
-};
-
-enum brakeSystem
-{
-    MANDO = 1,
-    CONTINENTAL,
-    BOSCH_B
-};
-
-enum SteeringSystem
-{
-    BOSCH_S = 1,
-    MOBIS
-};
-
 enum InputValidationResult
 {
     Valid,
@@ -49,8 +22,9 @@ enum MenuTranstion
     Backward
 };
 
+#ifdef NDEBUG
 int run_assemble();
-
+#endif
 void delay(int ms);
 
 void selectCarType(int answer);
@@ -58,18 +32,9 @@ void selectEngine(int answer);
 void selectbrakeSystem(int answer);
 void selectSteeringSystem(int answer);
 
-void runProducedCar();
-void PrintProcedureCarType(int cartype);
-void PrintProcedureEngine(int engine);
-void PrintProcedureBrakeSystem(int brake);
-void PrintProcedureSteeringSystem(int steer);
-
-void testProducedCar();
-
 void SelectCarAndParts(QuestionType step, int answer);
 void MenuNormalTransition(QuestionType& step);
 void ProducedCar(int answer);
-
 MenuTranstion InputCheckForMenuTransition(int answer, QuestionType& step);
 
 InputValidationResult InputVaildation(char* buf, QuestionType& step, int& answer);
@@ -83,4 +48,3 @@ void PrintSelectSteerType();
 void PrintSelectBrakeType();
 void PrintSelectEngineType();
 void PrintSelectCarType();
-

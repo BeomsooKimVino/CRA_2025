@@ -3,9 +3,11 @@
 #include <string.h>
 #include <stdlib.h>
 
+#include "Car.h"
+
 #define CLEAR_SCREEN "\033[H\033[2J"
 
-extern int stack[10];
+extern Car car;
 
 void PrintSelectRunTest()
 {
@@ -59,77 +61,103 @@ void PrintSelectCarType()
 
 void selectCarType(int answer)
 {
-    stack[CarType_Q] = answer;
-    if (answer == 1)
-        printf("차량 타입으로 Sedan을 선택하셨습니다.\n");
-    if (answer == 2)
-        printf("차량 타입으로 SUV을 선택하셨습니다.\n");
-    if (answer == 3)
-        printf("차량 타입으로 Truck을 선택하셨습니다.\n");
+    switch (answer)
+    {
+    case 1:
+        car.SetCarType(Type::Sedan);
+        break;
+    case 2:
+        car.SetCarType(Type::SUV);
+        break;
+    case 3:
+        car.SetCarType(Type::Truck);
+        break;
+    }
+    printf("차량 타입으로 %s을 선택하셨습니다.\n", car.GetTypeName().c_str());
 }
 
 void selectEngine(int answer)
 {
-    stack[Engine_Q] = answer;
-    if (answer == 1)
-        printf("GM 엔진을 선택하셨습니다.\n");
-    if (answer == 2)
-        printf("TOYOTA 엔진을 선택하셨습니다.\n");
-    if (answer == 3)
-        printf("WIA 엔진을 선택하셨습니다.\n");
+    std::unique_ptr<IEngine> engine;
+    switch (answer)
+    {
+        case 1:
+            engine = std::move(std::make_unique<GMEngine>());
+            break;
+        case 2:
+            engine = std::move(std::make_unique<ToyotaEngine>());
+            break;
+        case 3:
+            engine = std::move(std::make_unique<WiaEngine>());
+            break;
+        case 4:
+            engine = std::move(std::make_unique<BrokenEngine>());
+            break;
+    }
+
+    car.SetEngine(std::move(engine));
+    if (answer < 4)
+        printf("%s 엔진을 선택하셨습니다.\n", car.GetEngine()->name().c_str());
 }
 
 void selectbrakeSystem(int answer)
 {
-    stack[brakeSystem_Q] = answer;
-    if (answer == 1)
-        printf("MANDO 제동장치를 선택하셨습니다.\n");
-    if (answer == 2)
-        printf("CONTINENTAL 제동장치를 선택하셨습니다.\n");
-    if (answer == 3)
-        printf("BOSCH 제동장치를 선택하셨습니다.\n");
+    std::unique_ptr<IBrakeSystem> brake;
+    switch (answer)
+    {
+    case 1:
+        brake = std::move(std::make_unique<MandoBrakeSystem>());
+        break;
+    case 2:
+        brake = std::move(std::make_unique<ContinentalBrakeSystem>());
+        break;
+    case 3:
+        brake = std::move(std::make_unique<BoschBrakeSystem>());
+        break;
+    }
+
+    car.SetBrake(std::move(brake));
+    printf("%s 제동장치를 선택하셨습니다.\n", car.GetBrake()->name().c_str());
+
 }
 
 void selectSteeringSystem(int answer)
 {
-    stack[SteeringSystem_Q] = answer;
-    if (answer == 1)
-        printf("BOSCH 조향장치를 선택하셨습니다.\n");
-    if (answer == 2)
-        printf("MOBIS 조향장치를 선택하셨습니다.\n");
+    std::unique_ptr<ISteeringSystem> steer;
+    switch (answer)
+    {
+    case 1:
+        steer = std::move(std::make_unique<BoschSteeringSystem>());
+        break;
+    case 2:
+        steer = std::move(std::make_unique<MobisSteeringSystem>());
+        break;
+    }
+
+    car.SetSteering(std::move(steer));
+    printf("%s 조향장치를 선택하셨습니다.\n", car.GetSteering()->name().c_str());
 }
 
 void PrintMenuByStep(int step)
 {
     printf(CLEAR_SCREEN);
 
-    if (step == CarType_Q)
+    switch (step)
     {
-        PrintSelectCarType();
+        case CarType_Q: PrintSelectCarType(); break;
+        case Engine_Q: PrintSelectEngineType(); break;
+        case brakeSystem_Q: PrintSelectBrakeType(); break;
+        case SteeringSystem_Q: PrintSelectSteerType(); break;
+        case Run_Test: PrintSelectRunTest(); break;
     }
-    else if (step == Engine_Q)
-    {
-        PrintSelectEngineType();
-    }
-    else if (step == brakeSystem_Q)
-    {
-        PrintSelectBrakeType();
-    }
-    else if (step == SteeringSystem_Q)
-    {
-        PrintSelectSteerType();
-    }
-    else if (step == Run_Test)
-    {
-        PrintSelectRunTest();
-    }
+
     printf("===============================\n");
 }
 
 InputValidationResult InputVaildation(char* buf, QuestionType& step, int &answer)
 {
     // TODO: 제출할 때는 800으로 변경 필요
-    int delay_ms = 8;
+    int delay_ms = 800;
 
     // 숫자로 된 대답인지 확인
     char* checkNumber;
@@ -180,6 +208,7 @@ InputValidationResult InputVaildation(char* buf, QuestionType& step, int &answer
 
     return InputValidationResult::Valid;
 }
+#ifdef NDEBUG
 
 void UserInputAndRemoveLF(char  buf[100])
 {
@@ -219,3 +248,4 @@ bool IsExit(char buf[100])
     }
     return false;
 }
+#endif

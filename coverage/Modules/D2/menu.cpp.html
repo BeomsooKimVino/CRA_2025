@@ -1,0 +1,277 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+        <meta charset="utf-8"/>
+	    <title>menu.cpp</title>
+	    <link href="../../third-party/google-code-prettify/prettify-CppCoverage.css" type="text/css" rel="stylesheet" />
+	    <script type="text/javascript" src="../../third-party/google-code-prettify/prettify.js"></script>
+	</head>
+    <body onload="prettyPrint()">
+        <h4></h4>
+        <pre class="prettyprint lang-cpp linenums">
+#include "assemble.h"
+#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+#include &lt;stdlib.h&gt;
+
+#include "Car.h"
+
+#define CLEAR_SCREEN "\033[H\033[2J"
+
+extern Car car;
+
+void PrintSelectRunTest()
+<span style = "background-color:#dfd">{
+    printf("¸ÚÁø Â÷·®ÀÌ ¿Ï¼ºµÇ¾ú½À´Ï´Ù.\n");
+    printf("¾î¶² µ¿ÀÛÀ» ÇÒ±î¿ä?\n");
+    printf("0. Ã³À½ È­¸éÀ¸·Î µ¹¾Æ°¡±â\n");
+    printf("1. RUN\n");
+    printf("2. Test\n");
+}</span>
+
+void PrintSelectSteerType()
+<span style = "background-color:#dfd">{
+    printf("¾î¶² Á¶ÇâÀåÄ¡¸¦ ¼±ÅÃÇÒ±î¿ä?\n");
+    printf("0. µÚ·Î°¡±â\n");
+    printf("1. BOSCH\n");
+    printf("2. MOBIS\n");
+}</span>
+
+void PrintSelectBrakeType()
+<span style = "background-color:#dfd">{
+    printf("¾î¶² Á¦µ¿ÀåÄ¡¸¦ ¼±ÅÃÇÒ±î¿ä?\n");
+    printf("0. µÚ·Î°¡±â\n");
+    printf("1. MANDO\n");
+    printf("2. CONTINENTAL\n");
+    printf("3. BOSCH\n");
+}</span>
+
+void PrintSelectEngineType()
+<span style = "background-color:#dfd">{
+    printf("¾î¶² ¿£ÁøÀ» Å¾ÀçÇÒ±î¿ä?\n");
+    printf("0. µÚ·Î°¡±â\n");
+    printf("1. GM\n");
+    printf("2. TOYOTA\n");
+    printf("3. WIA\n");
+    printf("4. °íÀå³­ ¿£Áø\n");
+}</span>
+
+void PrintSelectCarType()
+<span style = "background-color:#dfd">{
+    printf("        ______________\n");
+    printf("       /|            | \n");
+    printf("  ____/_|_____________|____\n");
+    printf(" |                      O  |\n");
+    printf(" '-(@)----------------(@)--'\n");
+    printf("===============================\n");
+    printf("¾î¶² Â÷·® Å¸ÀÔÀ» ¼±ÅÃÇÒ±î¿ä?\n");
+    printf("1. Sedan\n");
+    printf("2. SUV\n");
+    printf("3. Truck\n");
+}</span>
+
+void selectCarType(int answer)
+<span style = "background-color:#dfd">{
+    switch (answer)</span>
+    {
+    case 1:
+<span style = "background-color:#dfd">        car.SetCarType(Type::Sedan);
+        break;</span>
+    case 2:
+<span style = "background-color:#dfd">        car.SetCarType(Type::SUV);
+        break;</span>
+    case 3:
+<span style = "background-color:#dfd">        car.SetCarType(Type::Truck);</span>
+        break;
+    }
+<span style = "background-color:#dfd">    printf("Â÷·® Å¸ÀÔÀ¸·Î %sÀ» ¼±ÅÃÇÏ¼Ì½À´Ï´Ù.\n", car.GetTypeName().c_str());
+}</span>
+
+void selectEngine(int answer)
+<span style = "background-color:#dfd">{
+    std::unique_ptr&lt;IEngine&gt; engine;
+    switch (answer)</span>
+    {
+        case 1:
+<span style = "background-color:#dfd">            engine = std::move(std::make_unique&lt;GMEngine&gt;());
+            break;</span>
+        case 2:
+<span style = "background-color:#dfd">            engine = std::move(std::make_unique&lt;ToyotaEngine&gt;());
+            break;</span>
+        case 3:
+<span style = "background-color:#dfd">            engine = std::move(std::make_unique&lt;WiaEngine&gt;());
+            break;</span>
+        case 4:
+<span style = "background-color:#dfd">            engine = std::move(std::make_unique&lt;BrokenEngine&gt;());</span>
+            break;
+    }
+
+<span style = "background-color:#dfd">    car.SetEngine(std::move(engine));
+    if (answer &lt; 4)
+        printf("%s ¿£ÁøÀ» ¼±ÅÃÇÏ¼Ì½À´Ï´Ù.\n", car.GetEngine()-&gt;name().c_str());
+}</span>
+
+void selectbrakeSystem(int answer)
+<span style = "background-color:#dfd">{
+    std::unique_ptr&lt;IBrakeSystem&gt; brake;
+    switch (answer)</span>
+    {
+    case 1:
+<span style = "background-color:#dfd">        brake = std::move(std::make_unique&lt;MandoBrakeSystem&gt;());
+        break;</span>
+    case 2:
+<span style = "background-color:#dfd">        brake = std::move(std::make_unique&lt;ContinentalBrakeSystem&gt;());
+        break;</span>
+    case 3:
+<span style = "background-color:#dfd">        brake = std::move(std::make_unique&lt;BoschBrakeSystem&gt;());</span>
+        break;
+    }
+
+<span style = "background-color:#dfd">    car.SetBrake(std::move(brake));
+    printf("%s Á¦µ¿ÀåÄ¡¸¦ ¼±ÅÃÇÏ¼Ì½À´Ï´Ù.\n", car.GetBrake()-&gt;name().c_str());</span>
+
+<span style = "background-color:#dfd">}</span>
+
+void selectSteeringSystem(int answer)
+<span style = "background-color:#dfd">{
+    std::unique_ptr&lt;ISteeringSystem&gt; steer;
+    switch (answer)</span>
+    {
+    case 1:
+<span style = "background-color:#dfd">        steer = std::move(std::make_unique&lt;BoschSteeringSystem&gt;());
+        break;</span>
+    case 2:
+<span style = "background-color:#dfd">        steer = std::move(std::make_unique&lt;MobisSteeringSystem&gt;());</span>
+        break;
+    }
+
+<span style = "background-color:#dfd">    car.SetSteering(std::move(steer));
+    printf("%s Á¶ÇâÀåÄ¡¸¦ ¼±ÅÃÇÏ¼Ì½À´Ï´Ù.\n", car.GetSteering()-&gt;name().c_str());
+}</span>
+
+void PrintMenuByStep(int step)
+<span style = "background-color:#dfd">{
+    printf(CLEAR_SCREEN);</span>
+
+<span style = "background-color:#dfd">    switch (step)</span>
+    {
+<span style = "background-color:#dfd">        case CarType_Q: PrintSelectCarType(); break;
+        case Engine_Q: PrintSelectEngineType(); break;
+        case brakeSystem_Q: PrintSelectBrakeType(); break;
+        case SteeringSystem_Q: PrintSelectSteerType(); break;
+        case Run_Test: PrintSelectRunTest(); break;</span>
+    }
+
+<span style = "background-color:#dfd">    printf("===============================\n");
+}</span>
+
+InputValidationResult InputVaildation(char* buf, QuestionType&amp; step, int &amp;answer)
+<span style = "background-color:#dfd">{</span>
+    // TODO: Á¦ÃâÇÒ ¶§´Â 800À¸·Î º¯°æ ÇÊ¿ä
+<span style = "background-color:#dfd">    int delay_ms = 800;</span>
+
+    // ¼ýÀÚ·Î µÈ ´ë´äÀÎÁö È®ÀÎ
+    char* checkNumber;
+<span style = "background-color:#dfd">    answer = strtol(buf, &amp;checkNumber, 10); // ¹®ÀÚ¿­À» 10Áø¼ö·Î º¯È¯</span>
+
+    // ÀÔ·Â¹ÞÀº ¹®ÀÚ°¡ ¼ýÀÚ°¡ ¾Æ´Ï¶ó¸é
+<span style = "background-color:#dfd">    if (*checkNumber != '\0')</span>
+    {
+<span style = "background-color:#dfd">        printf("ERROR :: ¼ýÀÚ¸¸ ÀÔ·Â °¡´É\n");
+        delay(delay_ms);
+        return InputValidationResult::Invalid;</span>
+    }
+
+<span style = "background-color:#dfd">    if (step == CarType_Q &amp;&amp; !(answer &gt;= 1 &amp;&amp; answer &lt;= 3))</span>
+    {
+<span style = "background-color:#dfd">        printf("ERROR :: Â÷·® Å¸ÀÔÀº 1 ~ 3 ¹üÀ§¸¸ ¼±ÅÃ °¡´É\n");
+        delay(delay_ms);
+        return InputValidationResult::Invalid;</span>
+    }
+
+<span style = "background-color:#dfd">    if (step == Engine_Q &amp;&amp; !(answer &gt;= 0 &amp;&amp; answer &lt;= 4))</span>
+    {
+<span style = "background-color:#dfd">        printf("ERROR :: ¿£ÁøÀº 1 ~ 4 ¹üÀ§¸¸ ¼±ÅÃ °¡´É\n");
+        delay(delay_ms);
+        return InputValidationResult::Invalid;</span>
+    }
+
+<span style = "background-color:#dfd">    if (step == brakeSystem_Q &amp;&amp; !(answer &gt;= 0 &amp;&amp; answer &lt;= 3))</span>
+    {
+<span style = "background-color:#dfd">        printf("ERROR :: Á¦µ¿ÀåÄ¡´Â 1 ~ 3 ¹üÀ§¸¸ ¼±ÅÃ °¡´É\n");
+        delay(delay_ms);
+        return InputValidationResult::Invalid;</span>
+    }
+
+<span style = "background-color:#dfd">    if (step == SteeringSystem_Q &amp;&amp; !(answer &gt;= 0 &amp;&amp; answer &lt;= 2))</span>
+    {
+<span style = "background-color:#dfd">        printf("ERROR :: Á¶ÇâÀåÄ¡´Â 1 ~ 2 ¹üÀ§¸¸ ¼±ÅÃ °¡´É\n");
+        delay(delay_ms);
+        return InputValidationResult::Invalid;</span>
+    }
+
+<span style = "background-color:#dfd">    if (step == Run_Test &amp;&amp; !(answer &gt;= 0 &amp;&amp; answer &lt;= 2))</span>
+    {
+<span style = "background-color:#dfd">        printf("ERROR :: Run ¶Ç´Â Test Áß ÇÏ³ª¸¦ ¼±ÅÃ ÇÊ¿ä\n");
+        delay(delay_ms);
+        return InputValidationResult::Invalid;</span>
+    }
+
+<span style = "background-color:#dfd">    return InputValidationResult::Valid;
+}</span>
+#ifdef NDEBUG
+
+void UserInputAndRemoveLF(char  buf[100])
+{
+    // »ç¿ëÀÚ ÀÔ·Â ¹Þ¾Æ¿À±â
+    printf("INPUT &gt; ");
+    fgets(buf, sizeof(buf), stdin);
+
+    // ¿£ÅÍ °³Çà¹®ÀÚ Á¦°Å
+    char* context = nullptr;
+    strtok_s(buf, "\r", &amp;context);
+    strtok_s(buf, "\n", &amp;context);
+}
+
+MenuTranstion InputCheckForMenuTransition(int answer, QuestionType&amp; step)
+{
+    // Ã³À½À¸·Î µ¹¾Æ°¡±â
+    if (answer == 0 &amp;&amp; step == Run_Test)
+    {
+        step = CarType_Q;
+        return MenuTranstion::StartPoint;
+    }
+
+    // ÀÌÀüÀ¸·Î µ¹¾Æ°¡±â
+    if (answer == 0 &amp;&amp; step &gt;= 1)
+    {
+        step = static_cast&lt;QuestionType&gt;(static_cast&lt;int&gt;(step) - 1);
+        return MenuTranstion::Backward;
+    }
+    return MenuTranstion::Forward;
+}
+
+bool IsExit(char buf[100])
+{
+    if (!strcmp(buf, "exit"))
+    {
+        return true;
+    }
+    return false;
+}
+#endif</pre>
+        <hr />
+        <table width="100%">
+            <thead>
+                <tr>
+                    <th align="center">
+                        <small>Generated by</small>
+                        <a href="https://github.com/OpenCppCoverage/OpenCppCoverage/releases">
+                            <strong>OpenCppCoverage (Version: 0.9.9.0)</strong>
+                        </a>
+                    </th>
+                </tr>
+            </thead>
+        </table>
+    </body>
+</html>
